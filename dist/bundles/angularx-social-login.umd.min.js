@@ -9748,6 +9748,84 @@
         return LinkedInLoginProvider;
     }(BaseLoginProvider));
 
+    var __extends$4 = (undefined && undefined.__extends) || (function () {
+        var extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return function (d, b) {
+            extendStatics(d, b);
+            function __() { this.constructor = d; }
+            d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+        };
+    })();
+    var AppleLoginProvider = /** @class */ (function (_super) {
+        __extends$4(AppleLoginProvider, _super);
+        function AppleLoginProvider(clientId, scope, redirectURI) {
+            var _this = _super.call(this) || this;
+            _this.clientId = clientId;
+            _this.scope = scope;
+            _this.redirectURI = redirectURI;
+            return _this;
+        }
+        /**
+         * @return {?}
+         */
+        AppleLoginProvider.prototype.initialize = /**
+         * @return {?}
+         */
+        function () {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                _this.loadScript(AppleLoginProvider.PROVIDER_ID, 'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js', function () {
+                    _this.auth2 = AppleID.auth.init({
+                        clientId: _this.clientId,
+                        scope: _this.scope,
+                        redirectURI: _this.redirectURI
+                    });
+                });
+            });
+        };
+        /**
+         * @param {?=} signInOptions
+         * @return {?}
+         */
+        AppleLoginProvider.prototype.signIn = /**
+         * @param {?=} signInOptions
+         * @return {?}
+         */
+        function (signInOptions) {
+            console.log("AppleCall Signin");
+            return new Promise(function (resolve, reject) {
+                var /** @type {?} */ promise = AppleID.auth.signIn();
+                promise.then(function (err) {
+                    reject(err);
+                });
+            });
+        };
+        /**
+         * @return {?}
+         */
+        AppleLoginProvider.prototype.getLoginStatus = /**
+         * @return {?}
+         */
+        function () {
+            return null;
+        };
+        /**
+         * @param {?=} revoke
+         * @return {?}
+         */
+        AppleLoginProvider.prototype.signOut = /**
+         * @param {?=} revoke
+         * @return {?}
+         */
+        function (revoke) {
+            return null;
+        };
+        AppleLoginProvider.PROVIDER_ID = 'APPLE';
+        return AppleLoginProvider;
+    }(BaseLoginProvider));
+
     /**
      * @fileoverview added by tsickle
      * @suppress {checkTypes} checked by tsc
@@ -9765,6 +9843,7 @@
     exports.FacebookLoginProvider = FacebookLoginProvider;
     exports.LinkedInLoginProvider = LinkedInLoginProvider;
     exports.AuthServiceConfig = AuthServiceConfig;
+    exports.AppleLoginProvider = AppleLoginProvider;
     exports.ɵa = BaseLoginProvider;
 
     Object.defineProperty(exports, '__esModule', { value: true });

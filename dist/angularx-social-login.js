@@ -9626,11 +9626,70 @@ LinkedInLoginProvider.PROVIDER_ID = 'LINKEDIN';
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
+class AppleLoginProvider extends BaseLoginProvider {
+    /**
+     * @param {?} clientId
+     * @param {?} scope
+     * @param {?} redirectURI
+     */
+    constructor(clientId, scope, redirectURI) {
+        super();
+        this.clientId = clientId;
+        this.scope = scope;
+        this.redirectURI = redirectURI;
+    }
+    /**
+     * @return {?}
+     */
+    initialize() {
+        return new Promise((resolve, reject) => {
+            this.loadScript(AppleLoginProvider.PROVIDER_ID, 'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js', () => {
+                this.auth2 = AppleID.auth.init({
+                    clientId: this.clientId,
+                    scope: this.scope,
+                    redirectURI: this.redirectURI
+                });
+            });
+        });
+    }
+    /**
+     * @param {?=} signInOptions
+     * @return {?}
+     */
+    signIn(signInOptions) {
+        console.log("AppleCall Signin");
+        return new Promise((resolve, reject) => {
+            let /** @type {?} */ promise = AppleID.auth.signIn();
+            promise.then((err) => {
+                reject(err);
+            });
+        });
+    }
+    /**
+     * @return {?}
+     */
+    getLoginStatus() {
+        return null;
+    }
+    /**
+     * @param {?=} revoke
+     * @return {?}
+     */
+    signOut(revoke) {
+        return null;
+    }
+}
+AppleLoginProvider.PROVIDER_ID = 'APPLE';
 
 /**
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
 
-export { AuthService, SocialLoginModule, SocialUser, GoogleLoginProvider, FacebookLoginProvider, LinkedInLoginProvider, AuthServiceConfig, BaseLoginProvider as ɵa };
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+
+export { AuthService, SocialLoginModule, SocialUser, GoogleLoginProvider, FacebookLoginProvider, LinkedInLoginProvider, AuthServiceConfig, AppleLoginProvider, BaseLoginProvider as ɵa };
 //# sourceMappingURL=angularx-social-login.js.map
