@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/abacritt/angularx-social-login/issues"
   },
-  "main": "./bundles/angularx-social-login.umd.js",
+  "main": "./dist/angularx-social-login.es5.js",
   "module": "./angularx-social-login.es5.js",
   "es2015": "./angularx-social-login.js",
   "typings": "./angularx-social-login.d.ts",

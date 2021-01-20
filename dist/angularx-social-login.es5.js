@@ -9756,11 +9756,12 @@ var __extends$4 = (undefined && undefined.__extends) || (function () {
 })();
 var AppleLoginProvider = /** @class */ (function (_super) {
     __extends$4(AppleLoginProvider, _super);
-    function AppleLoginProvider(clientId, scope, redirectURI) {
+    function AppleLoginProvider(clientId, scope, redirectURI, state) {
         var _this = _super.call(this) || this;
         _this.clientId = clientId;
         _this.scope = scope;
         _this.redirectURI = redirectURI;
+        _this.state = state;
         return _this;
     }
     /**
@@ -9776,7 +9777,8 @@ var AppleLoginProvider = /** @class */ (function (_super) {
                 _this.auth2 = AppleID.auth.init({
                     clientId: _this.clientId,
                     scope: _this.scope,
-                    redirectURI: _this.redirectURI
+                    redirectURI: _this.redirectURI,
+                    state: _this.state
                 });
             });
         });

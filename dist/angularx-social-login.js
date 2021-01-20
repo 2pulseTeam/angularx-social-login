@@ -9631,12 +9631,14 @@ class AppleLoginProvider extends BaseLoginProvider {
      * @param {?} clientId
      * @param {?} scope
      * @param {?} redirectURI
+     * @param {?} state
      */
-    constructor(clientId, scope, redirectURI) {
+    constructor(clientId, scope, redirectURI, state) {
         super();
         this.clientId = clientId;
         this.scope = scope;
         this.redirectURI = redirectURI;
+        this.state = state;
     }
     /**
      * @return {?}
@@ -9647,7 +9649,8 @@ class AppleLoginProvider extends BaseLoginProvider {
                 this.auth2 = AppleID.auth.init({
                     clientId: this.clientId,
                     scope: this.scope,
-                    redirectURI: this.redirectURI
+                    redirectURI: this.redirectURI,
+                    state: this.state
                 });
             });
         });
