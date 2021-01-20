@@ -10,7 +10,7 @@ export class AppleLoginProvider extends BaseLoginProvider {
 
     protected auth2: any;
 
-    constructor(private clientId: string, private scope: string, private redirectURI: string) { super(); }
+    constructor(private clientId: string, private scope: string, private redirectURI: string, private state: string) { super(); }
 
     initialize(): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -20,7 +20,8 @@ export class AppleLoginProvider extends BaseLoginProvider {
                         this.auth2 = AppleID.auth.init({
                             clientId : this.clientId,
                             scope : this.scope,
-                            redirectURI: this.redirectURI
+                            redirectURI: this.redirectURI,
+                            state: this.state
                         });
                 });
         });
