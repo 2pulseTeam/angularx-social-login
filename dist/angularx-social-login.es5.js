@@ -9390,7 +9390,9 @@ var GoogleLoginProvider = /** @class */ (function (_super) {
      */
     function () {
         var _this = this;
+        console.log('initialize google...');
         if (isPlatformServer(this._platformId)) {
+            console.log('google is server...');
             return;
         }
         return new Promise(function (resolve, reject) {

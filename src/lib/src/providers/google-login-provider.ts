@@ -15,7 +15,11 @@ export class GoogleLoginProvider extends BaseLoginProvider {
     constructor(private clientId: string, @Inject(PLATFORM_ID) public _platformId: Object, private opt: LoginOpt = { scope: 'email' }) { super(); }
 
     initialize(): Promise<void> {
+
+        console.log('initialize google...');
+
         if (isPlatformServer(this._platformId)) {
+            console.log('google is server...');
             return;
         }
 

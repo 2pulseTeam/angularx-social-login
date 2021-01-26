@@ -9328,7 +9328,9 @@ class GoogleLoginProvider extends BaseLoginProvider {
      * @return {?}
      */
     initialize() {
+        console.log('initialize google...');
         if (isPlatformServer(this._platformId)) {
+            console.log('google is server...');
             return;
         }
         return new Promise((resolve, reject) => {
