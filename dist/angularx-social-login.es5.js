@@ -9374,12 +9374,12 @@ var __assign$1 = (undefined && undefined.__assign) || Object.assign || function(
 };
 var GoogleLoginProvider = /** @class */ (function (_super) {
     __extends$1(GoogleLoginProvider, _super);
-    function GoogleLoginProvider(clientId, opt, _platformId) {
+    function GoogleLoginProvider(clientId, _platformId, opt) {
         if (opt === void 0) { opt = { scope: 'email' }; }
         var _this = _super.call(this) || this;
         _this.clientId = clientId;
-        _this.opt = opt;
         _this._platformId = _platformId;
+        _this.opt = opt;
         return _this;
     }
     /**
@@ -9391,20 +9391,21 @@ var GoogleLoginProvider = /** @class */ (function (_super) {
     function () {
         var _this = this;
         if (isPlatformServer(this._platformId)) {
-            return new Promise(function (resolve, reject) {
-                _this.loadScript(GoogleLoginProvider.PROVIDER_ID, 'https://apis.google.com/js/platform.js', function () {
-                    gapi.load('auth2', function () {
-                        _this.auth2 = gapi.auth2.init(__assign$1({}, _this.opt, { client_id: _this.clientId }));
-                        _this.auth2.then(function () {
-                            _this._readyState.next(true);
-                            resolve();
-                        }).catch(function (err) {
-                            reject(err);
-                        });
+            return;
+        }
+        return new Promise(function (resolve, reject) {
+            _this.loadScript(GoogleLoginProvider.PROVIDER_ID, 'https://apis.google.com/js/platform.js', function () {
+                gapi.load('auth2', function () {
+                    _this.auth2 = gapi.auth2.init(__assign$1({}, _this.opt, { client_id: _this.clientId }));
+                    _this.auth2.then(function () {
+                        _this._readyState.next(true);
+                        resolve();
+                    }).catch(function (err) {
+                        reject(err);
                     });
                 });
             });
-        }
+        });
     };
     /**
      * @return {?}
@@ -9505,8 +9506,8 @@ var GoogleLoginProvider = /** @class */ (function (_super) {
     /** @nocollapse */
     GoogleLoginProvider.ctorParameters = function () { return [
         null,
-        null,
         { type: Object, decorators: [{ type: Inject, args: [PLATFORM_ID,] },] },
+        null,
     ]; };
     return GoogleLoginProvider;
 }(BaseLoginProvider));

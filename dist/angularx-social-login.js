@@ -9315,34 +9315,35 @@ class BaseLoginProvider {
 class GoogleLoginProvider extends BaseLoginProvider {
     /**
      * @param {?} clientId
+     * @param {?} _platformId
      * @param {?=} opt
-     * @param {?=} _platformId
      */
-    constructor(clientId, opt = { scope: 'email' }, _platformId) {
+    constructor(clientId, _platformId, opt = { scope: 'email' }) {
         super();
         this.clientId = clientId;
-        this.opt = opt;
         this._platformId = _platformId;
+        this.opt = opt;
     }
     /**
      * @return {?}
      */
     initialize() {
         if (isPlatformServer(this._platformId)) {
-            return new Promise((resolve, reject) => {
-                this.loadScript(GoogleLoginProvider.PROVIDER_ID, 'https://apis.google.com/js/platform.js', () => {
-                    gapi.load('auth2', () => {
-                        this.auth2 = gapi.auth2.init(Object.assign({}, this.opt, { client_id: this.clientId }));
-                        this.auth2.then(() => {
-                            this._readyState.next(true);
-                            resolve();
-                        }).catch((err) => {
-                            reject(err);
-                        });
+            return;
+        }
+        return new Promise((resolve, reject) => {
+            this.loadScript(GoogleLoginProvider.PROVIDER_ID, 'https://apis.google.com/js/platform.js', () => {
+                gapi.load('auth2', () => {
+                    this.auth2 = gapi.auth2.init(Object.assign({}, this.opt, { client_id: this.clientId }));
+                    this.auth2.then(() => {
+                        this._readyState.next(true);
+                        resolve();
+                    }).catch((err) => {
+                        reject(err);
                     });
                 });
             });
-        }
+        });
     }
     /**
      * @return {?}
@@ -9430,8 +9431,8 @@ GoogleLoginProvider.PROVIDER_ID = 'GOOGLE';
 /** @nocollapse */
 GoogleLoginProvider.ctorParameters = () => [
     null,
-    null,
     { type: Object, decorators: [{ type: Inject, args: [PLATFORM_ID,] },] },
+    null,
 ];
 
 /**
