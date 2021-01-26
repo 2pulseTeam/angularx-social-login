@@ -1,6 +1,8 @@
 import { BaseLoginProvider } from '../entities/base-login-provider';
 import { SocialUser } from '../entities/user';
 import { LoginOpt } from '../auth.service';
+import { isPlatformServer } from '@angular/common';
+import { Inject, PLATFORM_ID } from '@angular/core';
 
 declare let gapi: any;
 
@@ -10,28 +12,30 @@ export class GoogleLoginProvider extends BaseLoginProvider {
 
     protected auth2: any;
 
-    constructor(private clientId: string, private opt: LoginOpt = { scope: 'email' }) { super(); }
+    constructor(private clientId: string, private opt: LoginOpt = { scope: 'email' }, @Inject(PLATFORM_ID) public _platformId: Object) { super(); }
 
     initialize(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.loadScript(GoogleLoginProvider.PROVIDER_ID,
-                'https://apis.google.com/js/platform.js',
-                () => {
-                    gapi.load('auth2', () => {
-                        this.auth2 = gapi.auth2.init({
-                            ...this.opt,
-                            client_id: this.clientId
-                        });
+        if (isPlatformServer(this._platformId)) {
+            return new Promise((resolve, reject) => {
+                this.loadScript(GoogleLoginProvider.PROVIDER_ID,
+                    'https://apis.google.com/js/platform.js',
+                    () => {
+                        gapi.load('auth2', () => {
+                            this.auth2 = gapi.auth2.init({
+                                ...this.opt,
+                                client_id: this.clientId
+                            });
 
-                        this.auth2.then(() => {
-                            this._readyState.next(true);
-                            resolve();
-                        }).catch((err: any) => {
-                            reject(err);
+                            this.auth2.then(() => {
+                                this._readyState.next(true);
+                                resolve();
+                            }).catch((err: any) => {
+                                reject(err);
+                            });
                         });
                     });
-                });
-        });
+            });
+        }
     }
 
     getLoginStatus(): Promise<SocialUser> {
