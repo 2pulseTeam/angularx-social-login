@@ -9393,7 +9393,7 @@ var GoogleLoginProvider = /** @class */ (function (_super) {
         console.log('initialize google...');
         if (isPlatformServer(this._platformId)) {
             console.log('google is server...');
-            return;
+            return new Promise(function (resolve, reject) { return resolve(); });
         }
         return new Promise(function (resolve, reject) {
             _this.loadScript(GoogleLoginProvider.PROVIDER_ID, 'https://apis.google.com/js/platform.js', function () {

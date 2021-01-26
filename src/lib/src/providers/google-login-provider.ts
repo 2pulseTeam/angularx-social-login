@@ -20,7 +20,7 @@ export class GoogleLoginProvider extends BaseLoginProvider {
 
         if (isPlatformServer(this._platformId)) {
             console.log('google is server...');
-            return;
+            return new Promise((resolve, reject) => resolve());
         }
 
         return new Promise((resolve, reject) => {

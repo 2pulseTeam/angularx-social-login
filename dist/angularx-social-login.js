@@ -9331,7 +9331,7 @@ class GoogleLoginProvider extends BaseLoginProvider {
         console.log('initialize google...');
         if (isPlatformServer(this._platformId)) {
             console.log('google is server...');
-            return;
+            return new Promise((resolve, reject) => resolve());
         }
         return new Promise((resolve, reject) => {
             this.loadScript(GoogleLoginProvider.PROVIDER_ID, 'https://apis.google.com/js/platform.js', () => {
