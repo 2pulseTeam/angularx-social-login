@@ -1,4 +1,4 @@
-import { Injectable, Attribute, ChangeDetectorRef, ComponentFactoryResolver, Directive, ElementRef, EventEmitter, Host, Inject, InjectionToken, Input, IterableDiffers, KeyValueDiffers, LOCALE_ID, NgModule, NgModuleRef, Optional, Pipe, Renderer2, TemplateRef, Version, ViewContainerRef, WrappedValue, isDevMode, ɵisListLikeIterable, ɵisObservable, ɵisPromise, ɵstringify } from '@angular/core';
+import { Injectable, Attribute, ChangeDetectorRef, ComponentFactoryResolver, Directive, ElementRef, EventEmitter, Host, Inject, InjectionToken, Input, IterableDiffers, KeyValueDiffers, LOCALE_ID, NgModule, NgModuleRef, Optional, Pipe, Renderer2, TemplateRef, Version, ViewContainerRef, WrappedValue, isDevMode, ɵisListLikeIterable, ɵisObservable, ɵisPromise, ɵstringify, PLATFORM_ID } from '@angular/core';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -9206,6 +9206,14 @@ var CommonModule = /** @class */ (function () {
  *
  */
 var DOCUMENT = new InjectionToken('DocumentToken');
+var PLATFORM_SERVER_ID = 'server';
+/**
+ * Returns whether a platform id represents a server platform.
+ * @experimental
+ */
+function isPlatformServer(platformId) {
+    return platformId === PLATFORM_SERVER_ID;
+}
 
 /**
  * @license
@@ -9308,29 +9316,33 @@ class GoogleLoginProvider extends BaseLoginProvider {
     /**
      * @param {?} clientId
      * @param {?=} opt
+     * @param {?=} _platformId
      */
-    constructor(clientId, opt = { scope: 'email' }) {
+    constructor(clientId, opt = { scope: 'email' }, _platformId) {
         super();
         this.clientId = clientId;
         this.opt = opt;
+        this._platformId = _platformId;
     }
     /**
      * @return {?}
      */
     initialize() {
-        return new Promise((resolve, reject) => {
-            this.loadScript(GoogleLoginProvider.PROVIDER_ID, 'https://apis.google.com/js/platform.js', () => {
-                gapi.load('auth2', () => {
-                    this.auth2 = gapi.auth2.init(Object.assign({}, this.opt, { client_id: this.clientId }));
-                    this.auth2.then(() => {
-                        this._readyState.next(true);
-                        resolve();
-                    }).catch((err) => {
-                        reject(err);
+        if (isPlatformServer(this._platformId)) {
+            return new Promise((resolve, reject) => {
+                this.loadScript(GoogleLoginProvider.PROVIDER_ID, 'https://apis.google.com/js/platform.js', () => {
+                    gapi.load('auth2', () => {
+                        this.auth2 = gapi.auth2.init(Object.assign({}, this.opt, { client_id: this.clientId }));
+                        this.auth2.then(() => {
+                            this._readyState.next(true);
+                            resolve();
+                        }).catch((err) => {
+                            reject(err);
+                        });
                     });
                 });
             });
-        });
+        }
     }
     /**
      * @return {?}
@@ -9415,6 +9427,12 @@ class GoogleLoginProvider extends BaseLoginProvider {
     }
 }
 GoogleLoginProvider.PROVIDER_ID = 'GOOGLE';
+/** @nocollapse */
+GoogleLoginProvider.ctorParameters = () => [
+    null,
+    null,
+    { type: Object, decorators: [{ type: Inject, args: [PLATFORM_ID,] },] },
+];
 
 /**
  * @fileoverview added by tsickle

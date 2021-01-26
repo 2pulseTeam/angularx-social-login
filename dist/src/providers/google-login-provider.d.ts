@@ -4,9 +4,10 @@ import { LoginOpt } from '../auth.service';
 export declare class GoogleLoginProvider extends BaseLoginProvider {
     private clientId;
     private opt;
+    _platformId: Object;
     static readonly PROVIDER_ID: string;
     protected auth2: any;
-    constructor(clientId: string, opt?: LoginOpt);
+    constructor(clientId: string, opt: LoginOpt, _platformId: Object);
     initialize(): Promise<void>;
     getLoginStatus(): Promise<SocialUser>;
     signIn(opt?: LoginOpt): Promise<SocialUser>;

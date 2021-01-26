@@ -9228,6 +9228,14 @@
      *
      */
     var DOCUMENT = new core.InjectionToken('DocumentToken');
+    var PLATFORM_SERVER_ID = 'server';
+    /**
+     * Returns whether a platform id represents a server platform.
+     * @experimental
+     */
+    function isPlatformServer(platformId) {
+        return platformId === PLATFORM_SERVER_ID;
+    }
 
     /**
      * @license
@@ -9370,11 +9378,12 @@
     };
     var GoogleLoginProvider = /** @class */ (function (_super) {
         __extends$1(GoogleLoginProvider, _super);
-        function GoogleLoginProvider(clientId, opt) {
+        function GoogleLoginProvider(clientId, opt, _platformId) {
             if (opt === void 0) { opt = { scope: 'email' }; }
             var _this = _super.call(this) || this;
             _this.clientId = clientId;
             _this.opt = opt;
+            _this._platformId = _platformId;
             return _this;
         }
         /**
@@ -9385,19 +9394,21 @@
          */
         function () {
             var _this = this;
-            return new Promise(function (resolve, reject) {
-                _this.loadScript(GoogleLoginProvider.PROVIDER_ID, 'https://apis.google.com/js/platform.js', function () {
-                    gapi.load('auth2', function () {
-                        _this.auth2 = gapi.auth2.init(__assign$1({}, _this.opt, { client_id: _this.clientId }));
-                        _this.auth2.then(function () {
-                            _this._readyState.next(true);
-                            resolve();
-                        }).catch(function (err) {
-                            reject(err);
+            if (isPlatformServer(this._platformId)) {
+                return new Promise(function (resolve, reject) {
+                    _this.loadScript(GoogleLoginProvider.PROVIDER_ID, 'https://apis.google.com/js/platform.js', function () {
+                        gapi.load('auth2', function () {
+                            _this.auth2 = gapi.auth2.init(__assign$1({}, _this.opt, { client_id: _this.clientId }));
+                            _this.auth2.then(function () {
+                                _this._readyState.next(true);
+                                resolve();
+                            }).catch(function (err) {
+                                reject(err);
+                            });
                         });
                     });
                 });
-            });
+            }
         };
         /**
          * @return {?}
@@ -9495,6 +9506,12 @@
             });
         };
         GoogleLoginProvider.PROVIDER_ID = 'GOOGLE';
+        /** @nocollapse */
+        GoogleLoginProvider.ctorParameters = function () { return [
+            null,
+            null,
+            { type: Object, decorators: [{ type: core.Inject, args: [core.PLATFORM_ID,] },] },
+        ]; };
         return GoogleLoginProvider;
     }(BaseLoginProvider));
 
